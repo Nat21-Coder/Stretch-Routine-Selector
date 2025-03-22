@@ -11,6 +11,7 @@ import {
   SpadeIcon as Spine,
   Footprints,
   Activity,
+  Users,
   Clock3,
   Clock6,
   Clock9,
@@ -117,7 +118,7 @@ export default function StretchRoutineSelector() {
     { id: "back", label: "Back", icon: Spine, value: "back" as BodyArea },
     { id: "hips", label: "Hips", icon: Activity, value: "hips" as BodyArea },
     { id: "legs", label: "Legs", icon: Footprints, value: "legs" as BodyArea },
-    { id: "fullBody", label: "Full Body", icon: Activity, value: "fullBody" as BodyArea },
+    { id: "fullBody", label: "Full Body", icon: Users, value: "fullBody" as BodyArea },
   ]
 
   // Duration options with icons
@@ -129,7 +130,7 @@ export default function StretchRoutineSelector() {
   ]
 
   return (
-    <div className="w-full max-w-3xl">
+    <div className="w-full max-w-3xl mx-auto">
       {!routine ? (
         <Card>
           <CardHeader>
@@ -148,11 +149,10 @@ export default function StretchRoutineSelector() {
                     type="button"
                     onClick={() => handleAreaChange(area.value)}
                     className={cn(
-                      "flex items-center justify-center gap-2 p-3 rounded-md border transition-all",
-                      "hover:bg-accent hover:text-accent-foreground",
+                      "flex items-center justify-center gap-2 p-3 rounded-md border transition-all active:scale-95",
                       selectedAreas.includes(area.value)
-                        ? "bg-primary text-primary-foreground border-primary"
-                        : "bg-background border-input",
+                        ? "bg-primary text-primary-foreground border-primary hover:bg-primary/90"
+                        : "bg-background border-input hover:bg-accent hover:text-accent-foreground",
                     )}
                     aria-pressed={selectedAreas.includes(area.value)}
                   >
@@ -162,7 +162,7 @@ export default function StretchRoutineSelector() {
                 ))}
               </div>
               <p className="text-sm text-muted-foreground mt-2">
-                If no areas are selected, a full body routine will be generated.
+                Select at least one area or a full body routine will be generated.
               </p>
             </div>
 
@@ -175,11 +175,10 @@ export default function StretchRoutineSelector() {
                     type="button"
                     onClick={() => setDuration(option.value as Duration)}
                     className={cn(
-                      "flex items-center justify-center gap-2 p-3 rounded-md border transition-all",
-                      "hover:bg-accent hover:text-accent-foreground",
+                      "flex items-center justify-center gap-2 p-3 rounded-md border transition-all active:scale-95",
                       duration === option.value
-                        ? "bg-primary text-primary-foreground border-primary"
-                        : "bg-background border-input",
+                        ? "bg-primary text-primary-foreground border-primary hover:bg-primary/90"
+                        : "bg-background border-input hover:bg-accent hover:text-accent-foreground",
                     )}
                     aria-pressed={duration === option.value}
                   >
@@ -191,7 +190,7 @@ export default function StretchRoutineSelector() {
             </div>
           </CardContent>
           <CardFooter>
-            <Button onClick={generateRoutine} className="w-full">
+            <Button onClick={generateRoutine} className="w-full active:scale-95">
               Generate Routine
             </Button>
           </CardFooter>

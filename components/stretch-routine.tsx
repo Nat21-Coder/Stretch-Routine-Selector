@@ -152,6 +152,10 @@ export default function StretchRoutine({ exercises, duration, onReset, onRegener
     }
   }
 
+  const unmarkAsCompleted = () => {
+    setCompletedExercises((prev) => prev.filter((index) => index !== currentExerciseIndex))
+  }
+
   const finishRoutine = () => {
     setRoutineComplete(true)
     setIsActive(false)
@@ -172,7 +176,7 @@ export default function StretchRoutine({ exercises, duration, onReset, onRegener
   const remainingTime = totalRoutineTime - elapsedTime
 
   return (
-    <Card className="w-full">
+    <Card className="w-full mt-8">
       <CardHeader>
         <CardTitle className="text-2xl">Your {duration}-Minute Stretch Routine</CardTitle>
         <CardDescription>
@@ -180,7 +184,7 @@ export default function StretchRoutine({ exercises, duration, onReset, onRegener
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="flex justify-between text-sm text-muted-foreground">
+        <div className="flex flex-col sm:flex-row sm:justify-between text-sm text-muted-foreground gap-1">
           <span>
             Time Progress: {timeProgress}% ({formatTime(elapsedTime)} elapsed)
           </span>
@@ -188,24 +192,23 @@ export default function StretchRoutine({ exercises, duration, onReset, onRegener
         </div>
         <Progress value={timeProgress} className="h-2" />
 
-        <div className="flex justify-between text-sm text-muted-foreground">
+        <div className="flex flex-col sm:flex-row sm:justify-between text-sm text-muted-foreground gap-1">
+          <span>Exercise Progress: {exerciseProgress}%</span>
           <span>
-            Exercise Progress: {exerciseProgress}% ({completedExercises.length} of {totalExercises} completed)
-          </span>
-          <span>
-            Exercise {currentExerciseIndex + 1} of {totalExercises}
+            {completedExercises.length} of {totalExercises} completed • Exercise {currentExerciseIndex + 1} of{" "}
+            {totalExercises}
           </span>
         </div>
         <Progress value={exerciseProgress} className="h-2" />
 
         {!routineComplete ? (
           <>
-            <div className={`p-6 rounded-lg ${isBreak ? "bg-blue-50 dark:bg-blue-900/20" : "bg-muted"}`}>
+            <div className={`p-6 rounded-lg ${isBreak ? "bg-secondary/30" : "bg-muted"}`}>
               {isBreak ? (
                 <>
                   <div className="flex justify-between items-center mb-2">
                     <h3 className="text-xl font-semibold">Break Time</h3>
-                    <span className="text-blue-500 flex items-center">
+                    <span className="text-secondary-foreground flex items-center">
                       <Clock className="h-4 w-4 mr-1" /> Rest
                     </span>
                   </div>
@@ -233,30 +236,56 @@ export default function StretchRoutine({ exercises, duration, onReset, onRegener
                     onClick={previousExercise}
                     disabled={currentExerciseIndex === 0 && !isBreak}
                     aria-label="Previous"
+                    className="active:scale-95"
                   >
                     <SkipBack className="h-4 w-4" />
                   </Button>
-                  <Button variant="outline" size="icon" onClick={toggleTimer} aria-label={isActive ? "Pause" : "Play"}>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={toggleTimer}
+                    aria-label={isActive ? "Pause" : "Play"}
+                    className="active:scale-95"
+                  >
                     {isActive ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
                   </Button>
-                  <Button variant="outline" size="icon" onClick={skipExercise} aria-label="Skip">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={skipExercise}
+                    aria-label="Skip"
+                    className="active:scale-95"
+                  >
                     <SkipForward className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
             </div>
 
-            {!isBreak && (
-              <div className="flex justify-between">
-                <Button variant="outline" size="sm" onClick={markAsCompleted} disabled={isCurrentExerciseCompleted}>
+            <div className="flex justify-between">
+              {!isBreak && isCurrentExerciseCompleted ? (
+                <Button variant="outline" size="sm" onClick={unmarkAsCompleted} className="active:scale-95">
+                  <CheckCircle className="h-4 w-4 mr-2" />
+                  Unmark as Completed
+                </Button>
+              ) : !isBreak ? (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={markAsCompleted}
+                  disabled={isCurrentExerciseCompleted}
+                  className="active:scale-95"
+                >
                   <CheckCircle className="h-4 w-4 mr-2" />
                   Mark as Completed
                 </Button>
-                <Button variant="outline" size="sm" onClick={finishRoutine}>
-                  Finish Routine
-                </Button>
-              </div>
-            )}
+              ) : (
+                <div></div> // Empty div to maintain layout when in break mode
+              )}
+              <Button variant="outline" size="sm" onClick={finishRoutine} className="active:scale-95">
+                Finish Routine
+              </Button>
+            </div>
 
             <div className="space-y-4">
               <h3 className="text-lg font-medium">Up Next</h3>
@@ -301,14 +330,16 @@ export default function StretchRoutine({ exercises, duration, onReset, onRegener
         )}
       </CardContent>
       <CardFooter className="flex flex-col sm:flex-row gap-2">
-        <Button variant="outline" onClick={onReset} className="w-full sm:w-auto">
+        <Button variant="outline" onClick={onReset} className="w-full sm:w-auto active:scale-95">
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Selection
+          Start Over
         </Button>
-        <Button variant="outline" onClick={onRegenerate} className="w-full sm:w-auto">
-          <RefreshCw className="mr-2 h-4 w-4" />
-          Generate New Routine
-        </Button>
+        {!routineComplete && (
+          <Button variant="outline" onClick={onRegenerate} className="w-full sm:w-auto active:scale-95">
+            <RefreshCw className="mr-2 h-4 w-4" />
+            Generate New Routine
+          </Button>
+        )}
       </CardFooter>
     </Card>
   )
