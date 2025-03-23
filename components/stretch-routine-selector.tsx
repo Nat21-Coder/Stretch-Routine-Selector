@@ -5,22 +5,9 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button"
 import { stretchExercises } from "@/data/stretch-exercises"
 import StretchRoutine from "./stretch-routine"
-import {
-  Brain,
-  Dumbbell,
-  SpadeIcon as Spine,
-  Footprints,
-  Activity,
-  Users,
-  Clock3,
-  Clock6,
-  Clock9,
-  Clock12,
-} from "lucide-react"
 import { cn } from "@/lib/utils"
-
-type BodyArea = "neck" | "shoulders" | "back" | "hips" | "legs" | "fullBody"
-type Duration = "5" | "10" | "15" | "20"
+import { bodyAreas, durationOptions } from "@/constants"
+import { BodyArea, Duration } from "@/types"
 
 export default function StretchRoutineSelector() {
   const [selectedAreas, setSelectedAreas] = useState<BodyArea[]>([])
@@ -111,23 +98,6 @@ export default function StretchRoutineSelector() {
     setRoutine(null)
   }
 
-  // Body area icons with labels
-  const bodyAreas = [
-    { id: "neck", label: "Neck", icon: Brain, value: "neck" as BodyArea },
-    { id: "shoulders", label: "Shoulders", icon: Dumbbell, value: "shoulders" as BodyArea },
-    { id: "back", label: "Back", icon: Spine, value: "back" as BodyArea },
-    { id: "hips", label: "Hips", icon: Activity, value: "hips" as BodyArea },
-    { id: "legs", label: "Legs", icon: Footprints, value: "legs" as BodyArea },
-    { id: "fullBody", label: "Full Body", icon: Users, value: "fullBody" as BodyArea },
-  ]
-
-  // Duration options with icons
-  const durationOptions = [
-    { value: "5", label: "5 minutes", icon: Clock3 },
-    { value: "10", label: "10 minutes", icon: Clock6 },
-    { value: "15", label: "15 minutes", icon: Clock9 },
-    { value: "20", label: "20 minutes", icon: Clock12 },
-  ]
 
   return (
     <div className="w-full max-w-3xl mx-auto">
