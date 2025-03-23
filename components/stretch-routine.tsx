@@ -178,17 +178,17 @@ export default function StretchRoutine({ exercises, duration, onReset, onRegener
   return (
     <Card className="w-full mt-8">
       <CardHeader>
-        <CardTitle className="text-2xl">Your {duration}-Minute Stretch Routine</CardTitle>
+        <CardTitle className="text-xl sm:text-2xl truncate">Your {duration}-Minute Stretch Routine</CardTitle>
         <CardDescription>
           {totalExercises} exercises • Total time: {formatTime(totalRoutineTime)}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:justify-between text-sm text-muted-foreground gap-1">
-          <span>
+          <span className="truncate">
             Time Progress: {timeProgress}% ({formatTime(elapsedTime)} elapsed)
           </span>
-          <span>Remaining: {formatTime(Math.max(0, remainingTime))}</span>
+          <span className="truncate">Remaining: {formatTime(Math.max(0, remainingTime))}</span>
         </div>
         <Progress value={timeProgress} className="h-2" />
 
@@ -227,8 +227,8 @@ export default function StretchRoutine({ exercises, duration, onReset, onRegener
                   <p className="mb-4">{currentExercise.description}</p>
                 </>
               )}
-              <div className="flex items-center justify-between">
-                <div className="text-3xl font-bold">{formatTime(timeRemaining)}</div>
+              <div className="flex flex-col gap-4 sm:flex-row items-center sm:justify-between">
+                <div className="text-xl sm:text-3xl font-bold">{formatTime(timeRemaining)}</div>
                 <div className="flex gap-2">
                   <Button
                     variant="outline"
@@ -262,9 +262,9 @@ export default function StretchRoutine({ exercises, duration, onReset, onRegener
               </div>
             </div>
 
-            <div className="flex justify-between">
+            <div className="flex flex-col gap-2 sm:flex-row sm:justify-between">
               {!isBreak && isCurrentExerciseCompleted ? (
-                <Button variant="outline" size="sm" onClick={unmarkAsCompleted} className="active:scale-95">
+                <Button variant="outline" size="sm" onClick={unmarkAsCompleted} className="active:scale-95 truncate">
                   <CheckCircle className="h-4 w-4 mr-2" />
                   Unmark as Completed
                 </Button>
@@ -274,15 +274,15 @@ export default function StretchRoutine({ exercises, duration, onReset, onRegener
                   size="sm"
                   onClick={markAsCompleted}
                   disabled={isCurrentExerciseCompleted}
-                  className="active:scale-95"
+                  className="active:scale-95 truncate px-1"
                 >
                   <CheckCircle className="h-4 w-4 mr-2" />
                   Mark as Completed
                 </Button>
               ) : (
-                <div></div> // Empty div to maintain layout when in break mode
+                <div></div> 
               )}
-              <Button variant="outline" size="sm" onClick={finishRoutine} className="active:scale-95">
+              <Button variant="outline" size="sm" onClick={finishRoutine} className="active:scale-95 truncate">
                 Finish Routine
               </Button>
             </div>
@@ -330,13 +330,13 @@ export default function StretchRoutine({ exercises, duration, onReset, onRegener
         )}
       </CardContent>
       <CardFooter className="flex flex-col sm:flex-row gap-2">
-        <Button variant="outline" onClick={onReset} className="w-full sm:w-auto active:scale-95">
+        <Button variant="outline" onClick={onReset} className="w-full sm:w-auto active:scale-95 truncate px-1">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Start Over
         </Button>
         {!routineComplete && (
-          <Button variant="outline" onClick={onRegenerate} className="w-full sm:w-auto active:scale-95">
-            <RefreshCw className="mr-2 h-4 w-4" />
+          <Button variant="outline" onClick={onRegenerate} className="w-full sm:w-auto active:scale-95 truncate px-1">
+            <RefreshCw className="mr-2 h-4 w-4 " />
             Generate New Routine
           </Button>
         )}

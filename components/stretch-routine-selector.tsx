@@ -134,7 +134,7 @@ export default function StretchRoutineSelector() {
       {!routine ? (
         <Card>
           <CardHeader>
-            <CardTitle className="text-2xl">Stretch Routine Selector</CardTitle>
+            <CardTitle className="text-xl sm:text-2xl truncate">Stretch Routine Selector</CardTitle>
             <CardDescription>
               Select body areas to focus on and choose a duration for your stretching routine.
             </CardDescription>
@@ -142,14 +142,14 @@ export default function StretchRoutineSelector() {
           <CardContent className="space-y-6">
             <div>
               <h3 className="text-lg font-medium mb-3">Body Areas</h3>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1  sm:grid-cols-3 gap-3">
                 {bodyAreas.map((area) => (
                   <button
                     key={area.id}
                     type="button"
                     onClick={() => handleAreaChange(area.value)}
                     className={cn(
-                      "flex items-center justify-center gap-2 p-3 rounded-md border transition-all active:scale-95",
+                      "flex items-start sm:items-center truncate sm:justify-center gap-2 p-3 rounded-md border transition-all active:scale-95",
                       selectedAreas.includes(area.value)
                         ? "bg-primary text-primary-foreground border-primary hover:bg-primary/90"
                         : "bg-background border-input hover:bg-accent hover:text-accent-foreground",
@@ -168,21 +168,21 @@ export default function StretchRoutineSelector() {
 
             <div>
               <h3 className="text-lg font-medium mb-3">Duration (minutes)</h3>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
                 {durationOptions.map((option) => (
                   <button
                     key={option.value}
                     type="button"
                     onClick={() => setDuration(option.value as Duration)}
                     className={cn(
-                      "flex items-center justify-center gap-2 p-3 rounded-md border transition-all active:scale-95",
+                      "flex items-start sm:items-center sm:justify-center truncate gap-2 p-3 rounded-md border transition-all active:scale-95",
                       duration === option.value
                         ? "bg-primary text-primary-foreground border-primary hover:bg-primary/90"
                         : "bg-background border-input hover:bg-accent hover:text-accent-foreground",
                     )}
                     aria-pressed={duration === option.value}
                   >
-                    <option.icon className="h-4 w-4" />
+                    <option.icon className=" h-4 w-4" />
                     <span>{option.label}</span>
                   </button>
                 ))}
