@@ -3,10 +3,9 @@
 import { useState } from "react"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { stretchExercises } from "@/data/stretch-exercises"
 import StretchRoutine from "./stretch-routine"
 import { cn } from "@/lib/utils"
-import { bodyAreas, durationOptions } from "@/constants"
+import { bodyAreas, durationOptions, stretchExercises } from "@/constants"
 import { BodyArea, Duration } from "@/types"
 
 export default function StretchRoutineSelector() {
