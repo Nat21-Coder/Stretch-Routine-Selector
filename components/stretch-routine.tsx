@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
-import { ArrowLeft, RefreshCw, Play, Pause, SkipForward, SkipBack, CheckCircle, Clock } from "lucide-react"
+import { ArrowLeft, RefreshCw, Play, Pause, SkipForward, SkipBack, CheckCircle, Clock, X, CircleX, ListEnd } from "lucide-react"
 
 interface Exercise {
   id: string
@@ -216,15 +216,15 @@ export default function StretchRoutine({ exercises, duration, onReset, onRegener
                 </>
               ) : (
                 <>
-                  <div className="flex justify-between items-center mb-2">
-                    <h3 className="text-xl font-semibold">{currentExercise.name}</h3>
+                  <div className="flex flex-col gap-4 sm:flex-row  sm:justify-between items-center w-full mb-2">
+                    <h3 className="text-md sm:text-xl font-semibold">{currentExercise.name}</h3>
                     {isCurrentExerciseCompleted && (
                       <span className="text-green-500 flex items-center">
                         <CheckCircle className="h-4 w-4 mr-1" /> Completed
                       </span>
                     )}
                   </div>
-                  <p className="mb-4">{currentExercise.description}</p>
+                  <p className="mb-4 text-sm sm:text-md">{currentExercise.description}</p>
                 </>
               )}
               <div className="flex flex-col gap-4 sm:flex-row items-center sm:justify-between">
@@ -264,9 +264,12 @@ export default function StretchRoutine({ exercises, duration, onReset, onRegener
 
             <div className="flex flex-col gap-2 sm:flex-row sm:justify-between">
               {!isBreak && isCurrentExerciseCompleted ? (
-                <Button variant="outline" size="sm" onClick={unmarkAsCompleted} className="active:scale-95 truncate">
-                  <CheckCircle className="h-4 w-4 mr-2" />
+                <Button variant="outline" size="sm" onClick={unmarkAsCompleted} className="active:scale-95 flex gap-4 px-4">
+                  <CircleX className="h-4 w-4" />
+                  <span className="hidden sm:block">
+
                   Unmark as Completed
+                  </span>
                 </Button>
               ) : !isBreak ? (
                 <Button
@@ -274,16 +277,23 @@ export default function StretchRoutine({ exercises, duration, onReset, onRegener
                   size="sm"
                   onClick={markAsCompleted}
                   disabled={isCurrentExerciseCompleted}
-                  className="active:scale-95 truncate px-1"
+                  className="active:scale-95 flex gap-4 px-4"
                 >
-                  <CheckCircle className="h-4 w-4 mr-2" />
+                  <CheckCircle className="hh-4 w-4 " />
+                  <span className="hidden sm:block">
+
                   Mark as Completed
+                  </span>
                 </Button>
               ) : (
                 <div></div> 
               )}
-              <Button variant="outline" size="sm" onClick={finishRoutine} className="active:scale-95 truncate">
+              <Button variant="outline" size="sm" onClick={finishRoutine} className="active:scale-95 flex gap-4 px-4">
+                <ListEnd className="h-4 w-4"/>
+                <span className="hidden sm:block">
+
                 Finish Routine
+                </span>
               </Button>
             </div>
 
@@ -330,14 +340,19 @@ export default function StretchRoutine({ exercises, duration, onReset, onRegener
         )}
       </CardContent>
       <CardFooter className="flex flex-col sm:flex-row gap-2">
-        <Button variant="outline" onClick={onReset} className="w-full sm:w-auto active:scale-95 truncate px-1">
-          <ArrowLeft className="mr-2 h-4 w-4" />
+        <Button variant="outline" onClick={onReset} className="w-full sm:w-auto active:scale-95 flex gap-4 px-4">
+          <ArrowLeft className="h-4 w-4" />
+          <span className="hidden sm:block">
+
           Start Over
+          </span>
         </Button>
         {!routineComplete && (
-          <Button variant="outline" onClick={onRegenerate} className="w-full sm:w-auto active:scale-95 truncate px-1">
-            <RefreshCw className="mr-2 h-4 w-4 " />
+          <Button variant="outline" onClick={onRegenerate} className="w-full sm:w-auto active:scale-95 flex gap-4 px-4">
+            <RefreshCw className="h-4 w-4 " />
+            <span className="hidden sm:block">
             Generate New Routine
+              </span>
           </Button>
         )}
       </CardFooter>
