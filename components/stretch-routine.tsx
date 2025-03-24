@@ -1,90 +1,119 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Progress } from "@/components/ui/progress"
-import { ArrowLeft, RefreshCw, Play, Pause, SkipForward, SkipBack, CheckCircle, Clock, X, CircleX, ListEnd } from "lucide-react"
+import { useState, useEffect } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import {
+  ArrowLeft,
+  RefreshCw,
+  Play,
+  Pause,
+  SkipForward,
+  SkipBack,
+  CheckCircle,
+  Clock,
+  X,
+  CircleX,
+  ListEnd,
+} from "lucide-react";
 
 interface Exercise {
-  id: string
-  name: string
-  description: string
-  duration: number
-  bodyArea: string[]
-  isLast: boolean
-  breakAfter: number
+  id: string;
+  name: string;
+  description: string;
+  duration: number;
+  bodyArea: string[];
+  isLast: boolean;
+  breakAfter: number;
 }
 
 interface StretchRoutineProps {
-  exercises: Exercise[]
-  duration: number
-  onReset: () => void
-  onRegenerate: () => void
+  exercises: Exercise[];
+  duration: number;
+  onReset: () => void;
+  onRegenerate: () => void;
 }
 
-export default function StretchRoutine({ exercises, duration, onReset, onRegenerate }: StretchRoutineProps) {
-  const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0)
-  const [timeRemaining, setTimeRemaining] = useState(exercises[0]?.duration || 30)
-  const [isActive, setIsActive] = useState(false)
-  const [completedExercises, setCompletedExercises] = useState<number[]>([])
-  const [routineComplete, setRoutineComplete] = useState(false)
-  const [isBreak, setIsBreak] = useState(false)
-  const [elapsedTime, setElapsedTime] = useState(0)
+export default function StretchRoutine({
+  exercises,
+  duration,
+  onReset,
+  onRegenerate,
+}: StretchRoutineProps) {
+  const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
+  const [timeRemaining, setTimeRemaining] = useState(
+    exercises[0]?.duration || 30
+  );
+  const [isActive, setIsActive] = useState(false);
+  const [completedExercises, setCompletedExercises] = useState<number[]>([]);
+  const [routineComplete, setRoutineComplete] = useState(false);
+  const [isBreak, setIsBreak] = useState(false);
+  const [elapsedTime, setElapsedTime] = useState(0);
 
-  const totalExercises = exercises.length
-  const currentExercise = exercises[currentExerciseIndex]
-  const totalRoutineTime = exercises.reduce((total, ex) => total + ex.duration + ex.breakAfter, 0)
+  const totalExercises = exercises.length;
+  const currentExercise = exercises[currentExerciseIndex];
+  const totalRoutineTime = exercises.reduce(
+    (total, ex) => total + ex.duration + ex.breakAfter,
+    0
+  );
 
   useEffect(() => {
-    let interval: NodeJS.Timeout
+    let interval: NodeJS.Timeout;
 
     if (isActive) {
       interval = setInterval(() => {
         // Increment total elapsed time
-        setElapsedTime((prev) => prev + 1)
+        setElapsedTime((prev) => prev + 1);
 
         if (timeRemaining > 0) {
           // Decrement time remaining for current exercise or break
-          setTimeRemaining((prev) => prev - 1)
+          setTimeRemaining((prev) => prev - 1);
         } else {
           // Time is up for current activity
           if (isBreak) {
             // Break is over, move to next exercise
-            setIsBreak(false)
+            setIsBreak(false);
             if (currentExerciseIndex < totalExercises - 1) {
-              setCurrentExerciseIndex((prev) => prev + 1)
-              setTimeRemaining(exercises[currentExerciseIndex + 1].duration)
+              setCurrentExerciseIndex((prev) => prev + 1);
+              setTimeRemaining(exercises[currentExerciseIndex + 1].duration);
             } else {
               // Routine complete
-              setIsActive(false)
-              setRoutineComplete(true)
+              setIsActive(false);
+              setRoutineComplete(true);
             }
           } else {
             // Exercise is complete
             if (!completedExercises.includes(currentExerciseIndex)) {
-              setCompletedExercises((prev) => [...prev, currentExerciseIndex])
+              setCompletedExercises((prev) => [...prev, currentExerciseIndex]);
             }
 
             // Check if there's a break after this exercise
             if (currentExercise.breakAfter > 0) {
-              setIsBreak(true)
-              setTimeRemaining(currentExercise.breakAfter)
+              setIsBreak(true);
+              setTimeRemaining(currentExercise.breakAfter);
             } else if (currentExerciseIndex < totalExercises - 1) {
               // No break, but more exercises
-              setCurrentExerciseIndex((prev) => prev + 1)
-              setTimeRemaining(exercises[currentExerciseIndex + 1].duration)
+              setCurrentExerciseIndex((prev) => prev + 1);
+              setTimeRemaining(exercises[currentExerciseIndex + 1].duration);
             } else {
               // Routine complete
-              setIsActive(false)
-              setRoutineComplete(true)
+              setIsActive(false);
+              setRoutineComplete(true);
             }
           }
         }
-      }, 1000)
+      }, 1000);
     }
 
-    return () => clearInterval(interval)
+    return () => clearInterval(interval);
   }, [
     isActive,
     timeRemaining,
@@ -94,93 +123,104 @@ export default function StretchRoutine({ exercises, duration, onReset, onRegener
     isBreak,
     exercises,
     currentExercise,
-  ])
+  ]);
 
   const toggleTimer = () => {
-    setIsActive(!isActive)
-  }
+    setIsActive(!isActive);
+  };
 
   const skipExercise = () => {
-    setIsActive(false)
+    setIsActive(false);
 
     if (isBreak) {
       // Skip the break
-      setIsBreak(false)
+      setIsBreak(false);
       if (currentExerciseIndex < totalExercises - 1) {
-        setCurrentExerciseIndex((prev) => prev + 1)
-        setTimeRemaining(exercises[currentExerciseIndex + 1].duration)
+        setCurrentExerciseIndex((prev) => prev + 1);
+        setTimeRemaining(exercises[currentExerciseIndex + 1].duration);
       } else {
-        setRoutineComplete(true)
+        setRoutineComplete(true);
       }
     } else {
       // Skip the exercise
       if (currentExerciseIndex < totalExercises - 1) {
         // Check if there's a break after this exercise
         if (currentExercise.breakAfter > 0) {
-          setIsBreak(true)
-          setTimeRemaining(currentExercise.breakAfter)
+          setIsBreak(true);
+          setTimeRemaining(currentExercise.breakAfter);
         } else {
-          setCurrentExerciseIndex((prev) => prev + 1)
-          setTimeRemaining(exercises[currentExerciseIndex + 1].duration)
+          setCurrentExerciseIndex((prev) => prev + 1);
+          setTimeRemaining(exercises[currentExerciseIndex + 1].duration);
         }
       } else {
-        setRoutineComplete(true)
+        setRoutineComplete(true);
       }
     }
-  }
+  };
 
   const previousExercise = () => {
     if (currentExerciseIndex > 0 || isBreak) {
-      setIsActive(false)
+      setIsActive(false);
 
       if (isBreak) {
         // Go back to the current exercise
-        setIsBreak(false)
-        setTimeRemaining(currentExercise.duration)
+        setIsBreak(false);
+        setTimeRemaining(currentExercise.duration);
       } else {
         // Go to previous exercise
-        setCurrentExerciseIndex((prev) => prev - 1)
-        setTimeRemaining(exercises[currentExerciseIndex - 1].duration)
-        setIsBreak(false)
+        setCurrentExerciseIndex((prev) => prev - 1);
+        setTimeRemaining(exercises[currentExerciseIndex - 1].duration);
+        setIsBreak(false);
       }
     }
-  }
+  };
 
   const markAsCompleted = () => {
     if (!completedExercises.includes(currentExerciseIndex)) {
-      setCompletedExercises((prev) => [...prev, currentExerciseIndex])
+      setCompletedExercises((prev) => [...prev, currentExerciseIndex]);
     }
-  }
+  };
 
   const unmarkAsCompleted = () => {
-    setCompletedExercises((prev) => prev.filter((index) => index !== currentExerciseIndex))
-  }
+    setCompletedExercises((prev) =>
+      prev.filter((index) => index !== currentExerciseIndex)
+    );
+  };
 
   const finishRoutine = () => {
-    setRoutineComplete(true)
-    setIsActive(false)
-  }
+    setRoutineComplete(true);
+    setIsActive(false);
+  };
 
   const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60)
-    const secs = seconds % 60
-    return `${mins}:${secs < 10 ? "0" : ""}${secs}`
-  }
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
+  };
 
   // Calculate progress as percentage of total routine time
-  const timeProgress = Math.min(Math.round((elapsedTime / totalRoutineTime) * 100), 100)
-  const exerciseProgress = Math.round((completedExercises.length / totalExercises) * 100)
-  const isCurrentExerciseCompleted = completedExercises.includes(currentExerciseIndex)
+  const timeProgress = Math.min(
+    Math.round((elapsedTime / totalRoutineTime) * 100),
+    100
+  );
+  const exerciseProgress = Math.round(
+    (completedExercises.length / totalExercises) * 100
+  );
+  const isCurrentExerciseCompleted =
+    completedExercises.includes(currentExerciseIndex);
 
   // Calculate remaining time in the routine
-  const remainingTime = totalRoutineTime - elapsedTime
+  const remainingTime = totalRoutineTime - elapsedTime;
 
   return (
     <Card className="w-full mt-8">
       <CardHeader>
-        <CardTitle className="text-xl sm:text-2xl truncate">Your {duration}-Minute Stretch Routine</CardTitle>
+        <CardTitle className="text-xl sm:text-2xl truncate">
+          Your {duration}-Minute Stretch Routine
+        </CardTitle>
         <CardDescription>
-          {totalExercises} exercises • Total time: {formatTime(totalRoutineTime)}
+          {totalExercises} exercises • Total time:{" "}
+          {formatTime(totalRoutineTime)}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -188,22 +228,28 @@ export default function StretchRoutine({ exercises, duration, onReset, onRegener
           <span className="truncate">
             Time Progress: {timeProgress}% ({formatTime(elapsedTime)} elapsed)
           </span>
-          <span className="truncate">Remaining: {formatTime(Math.max(0, remainingTime))}</span>
+          <span className="truncate">
+            Remaining: {formatTime(Math.max(0, remainingTime))}
+          </span>
         </div>
         <Progress value={timeProgress} className="h-2" />
 
         <div className="flex flex-col sm:flex-row sm:justify-between text-sm text-muted-foreground gap-1">
           <span>Exercise Progress: {exerciseProgress}%</span>
           <span>
-            {completedExercises.length} of {totalExercises} completed • Exercise {currentExerciseIndex + 1} of{" "}
-            {totalExercises}
+            {completedExercises.length} of {totalExercises} completed • Exercise{" "}
+            {currentExerciseIndex + 1} of {totalExercises}
           </span>
         </div>
         <Progress value={exerciseProgress} className="h-2" />
 
         {!routineComplete ? (
           <>
-            <div className={`p-6 rounded-lg ${isBreak ? "bg-secondary/30" : "bg-muted"}`}>
+            <div
+              className={`p-6 rounded-lg ${
+                isBreak ? "bg-secondary/30" : "bg-muted"
+              }`}
+            >
               {isBreak ? (
                 <>
                   <div className="flex justify-between items-center mb-2">
@@ -212,23 +258,31 @@ export default function StretchRoutine({ exercises, duration, onReset, onRegener
                       <Clock className="h-4 w-4 mr-1" /> Rest
                     </span>
                   </div>
-                  <p className="mb-4">Take a moment to breathe and prepare for the next exercise.</p>
+                  <p className="mb-4">
+                    Take a moment to breathe and prepare for the next exercise.
+                  </p>
                 </>
               ) : (
                 <>
                   <div className="flex flex-col gap-4 sm:flex-row  sm:justify-between items-center w-full mb-2">
-                    <h3 className="text-md sm:text-xl font-semibold">{currentExercise.name}</h3>
+                    <h3 className="text-md sm:text-xl font-semibold">
+                      {currentExercise.name}
+                    </h3>
                     {isCurrentExerciseCompleted && (
                       <span className="text-green-500 flex items-center">
                         <CheckCircle className="h-4 w-4 mr-1" /> Completed
                       </span>
                     )}
                   </div>
-                  <p className="mb-4 text-sm sm:text-md">{currentExercise.description}</p>
+                  <p className="mb-4 text-sm sm:text-md">
+                    {currentExercise.description}
+                  </p>
                 </>
               )}
               <div className="flex flex-col gap-4 sm:flex-row items-center sm:justify-between">
-                <div className="text-xl sm:text-3xl font-bold">{formatTime(timeRemaining)}</div>
+                <div className="text-xl sm:text-3xl font-bold">
+                  {formatTime(timeRemaining)}
+                </div>
                 <div className="flex gap-2">
                   <Button
                     variant="outline"
@@ -247,7 +301,11 @@ export default function StretchRoutine({ exercises, duration, onReset, onRegener
                     aria-label={isActive ? "Pause" : "Play"}
                     className="active:scale-95"
                   >
-                    {isActive ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+                    {isActive ? (
+                      <Pause className="h-4 w-4" />
+                    ) : (
+                      <Play className="h-4 w-4" />
+                    )}
                   </Button>
                   <Button
                     variant="outline"
@@ -264,12 +322,14 @@ export default function StretchRoutine({ exercises, duration, onReset, onRegener
 
             <div className="flex flex-col gap-2 sm:flex-row sm:justify-between">
               {!isBreak && isCurrentExerciseCompleted ? (
-                <Button variant="outline" size="sm" onClick={unmarkAsCompleted} className="active:scale-95 flex gap-4 px-4">
-                  <CircleX className="h-4 w-4" />
-                  <span className="hidden sm:block">
-
-                  Unmark as Completed
-                  </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={unmarkAsCompleted}
+                  className="active:scale-95 flex gap-4 px-4"
+                >
+                  <CircleX className="hidden sm:block h-4 w-4" />
+                  <span className="truncate">Unmark as Completed</span>
                 </Button>
               ) : !isBreak ? (
                 <Button
@@ -279,21 +339,20 @@ export default function StretchRoutine({ exercises, duration, onReset, onRegener
                   disabled={isCurrentExerciseCompleted}
                   className="active:scale-95 flex gap-4 px-4"
                 >
-                  <CheckCircle className="hh-4 w-4 " />
-                  <span className="hidden sm:block">
-
-                  Mark as Completed
-                  </span>
+                  <CheckCircle className="hidden sm:block h-4 w-4 " />
+                  <span className="truncate">Mark as Completed</span>
                 </Button>
               ) : (
-                <div></div> 
+                <div></div>
               )}
-              <Button variant="outline" size="sm" onClick={finishRoutine} className="active:scale-95 flex gap-4 px-4">
-                <ListEnd className="h-4 w-4"/>
-                <span className="hidden sm:block">
-
-                Finish Routine
-                </span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={finishRoutine}
+                className="active:scale-95 flex gap-4 px-4"
+              >
+                <ListEnd className="hidden sm:block h-4 w-4" />
+                <span className="truncate">Finish Routine</span>
               </Button>
             </div>
 
@@ -301,23 +360,36 @@ export default function StretchRoutine({ exercises, duration, onReset, onRegener
               <h3 className="text-lg font-medium">Up Next</h3>
               {isBreak ? (
                 <div className="bg-background border rounded-lg p-4">
-                  <h4 className="font-medium">{exercises[currentExerciseIndex + 1]?.name || "Last Exercise"}</h4>
+                  <h4 className="font-medium">
+                    {exercises[currentExerciseIndex + 1]?.name ||
+                      "Last Exercise"}
+                  </h4>
                   <p className="text-sm text-muted-foreground">
-                    {exercises[currentExerciseIndex + 1]?.description.substring(0, 100) + "..." ||
-                      "This is the final exercise in your routine."}
+                    {exercises[currentExerciseIndex + 1]?.description.substring(
+                      0,
+                      100
+                    ) + "..." || "This is the final exercise in your routine."}
                   </p>
                 </div>
               ) : currentExerciseIndex < totalExercises - 1 ? (
                 <div className="bg-background border rounded-lg p-4">
-                  <h4 className="font-medium">{exercises[currentExerciseIndex + 1].name}</h4>
+                  <h4 className="font-medium">
+                    {exercises[currentExerciseIndex + 1].name}
+                  </h4>
                   <p className="text-sm text-muted-foreground">
-                    {exercises[currentExerciseIndex + 1].description.substring(0, 100)}...
+                    {exercises[currentExerciseIndex + 1].description.substring(
+                      0,
+                      100
+                    )}
+                    ...
                   </p>
                 </div>
               ) : (
                 <div className="bg-background border rounded-lg p-4">
                   <h4 className="font-medium">Last Exercise</h4>
-                  <p className="text-sm text-muted-foreground">This is the final exercise in your routine.</p>
+                  <p className="text-sm text-muted-foreground">
+                    This is the final exercise in your routine.
+                  </p>
                 </div>
               )}
             </div>
@@ -326,37 +398,44 @@ export default function StretchRoutine({ exercises, duration, onReset, onRegener
           <div className="bg-muted p-6 rounded-lg text-center">
             <h3 className="text-xl font-semibold mb-4">Routine Complete!</h3>
             <p className="mb-4">
-              Great job! You've completed {completedExercises.length} out of {totalExercises} exercises.
+              Great job! You've completed {completedExercises.length} out of{" "}
+              {totalExercises} exercises.
             </p>
             <p className="mb-4">
-              Total time: {formatTime(elapsedTime)} of {formatTime(totalRoutineTime)}
+              Total time: {formatTime(elapsedTime)} of{" "}
+              {formatTime(totalRoutineTime)}
             </p>
             {completedExercises.length > 0 ? (
               <p>Your body will thank you for the stretches you did today!</p>
             ) : (
-              <p>Consider trying a few exercises next time to help your body feel better.</p>
+              <p>
+                Consider trying a few exercises next time to help your body feel
+                better.
+              </p>
             )}
           </div>
         )}
       </CardContent>
       <CardFooter className="flex flex-col sm:flex-row gap-2">
-        <Button variant="outline" onClick={onReset} className="w-full sm:w-auto active:scale-95 flex gap-4 px-4">
-          <ArrowLeft className="h-4 w-4" />
-          <span className="hidden sm:block">
-
-          Start Over
-          </span>
+        <Button
+          variant="outline"
+          onClick={onReset}
+          className="w-full sm:w-auto active:scale-95 flex gap-4 px-4"
+        >
+          <ArrowLeft className="hidden sm:block h-4 w-4" />
+          <span className="truncate">Start Over</span>
         </Button>
         {!routineComplete && (
-          <Button variant="outline" onClick={onRegenerate} className="w-full sm:w-auto active:scale-95 flex gap-4 px-4">
-            <RefreshCw className="h-4 w-4 " />
-            <span className="hidden sm:block">
-            Generate New Routine
-              </span>
+          <Button
+            variant="outline"
+            onClick={onRegenerate}
+            className="w-full sm:w-auto active:scale-95 flex gap-4 px-4"
+          >
+            <RefreshCw className="hidden sm:block h-4 w-4 " />
+            <span className="truncate">Generate New Routine</span>
           </Button>
         )}
       </CardFooter>
     </Card>
-  )
+  );
 }
-
